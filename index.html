@@ -130,7 +130,7 @@
                 const element = document.getElementById(item.id);
                 decodeEffect(element, item.text);
                 element.style.opacity = 1; // Rende visibile
-            }, index * 700); // Ritardo progressivo
+            }, index * 500); // Ritardo progressivo
         });
 
         // Funzione per il countdown dei giorni rimanenti
@@ -147,7 +147,7 @@
             countdownSection.style.opacity = 1;
             updateCountdown();
             setInterval(updateCountdown, 86400000); // Aggiorna ogni 24 ore
-        }, elements.length * 1000 + 1000); // Ritardo dopo l'ultimo elemento
+        }, elements.length * 600 + 1000); // Ritardo dopo l'ultimo elemento
     </script>
 </body>
 </html>
