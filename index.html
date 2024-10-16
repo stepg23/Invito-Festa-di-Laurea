@@ -86,10 +86,10 @@
 </head>
 <body>
     <h1 id="title" class="decode-text"></h1>
-    <p class="info decode-text" id="date">...</p>
-    <p class="info decode-text" id="time">...</p>
-    <p class="info decode-text" id="place">...</p>
-    <p class="info decode-text" id="address">...</p>
+    <p class="info decode-text" id="date"></p>
+    <p class="info decode-text" id="time"></p>
+    <p class="info decode-text" id="place"></p>
+    <p class="info decode-text" id="address"></p>
 
     <div class="countdown decode-text" id="countdown-section" style="display: none;">
         <p>Mancano <span id="days">--</span> giorni!</p>
@@ -155,7 +155,7 @@
         function updateCountdown() {
             const now = new Date().getTime();
             const distance = eventDate - now;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24)) + 1;
+            const days = Math.ceil(distance / (1000 * 60 * 60 * 24)) ;
             document.getElementById("days").innerText = days >= 0 ? days : 0;
         }
     </script>
