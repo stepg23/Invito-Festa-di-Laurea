@@ -10,7 +10,7 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            color: #186c03; /* Cambia il colore del testo a un bianco più chiaro */
+            color: white;
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 50px;
@@ -19,7 +19,7 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            position: relative; /* Posiziona per inserire l'overlay */
+            position: relative;
         }
 
         /* Overlay semitrasparente */
@@ -30,71 +30,124 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6); /* Overlay nero con opacità al 60% */
+            background: rgba(0, 0, 0, 0.6);
             z-index: 1;
         }
 
         h1, .info, .countdown {
             position: relative;
-            z-index: 2; /* Porta il testo sopra l'overlay */
+            z-index: 2;
+            opacity: 0; /* Parte invisibile per l'effetto di apparizione */
         }
 
         h1 {
             font-size: 2.5em;
         }
+
         .info {
             font-size: 1.2em;
             margin: 20px 0;
         }
+
         .countdown {
             font-size: 2.5em;
             margin-top: 30px;
-            color: #186c03; /* Cambia il colore del countdown a dorato */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Ombra per il testo */
+            color: #186c03;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             animation: pulsate 1.5s infinite;
         }
+
         @keyframes pulsate {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
-        .clock-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
+
         .countdown-image {
             width: 200px;
             height: auto;
             margin-top: 20px;
         }
+
+        /* Effetto decodifica */
+        .decode-text {
+            display: inline-block;
+            font-family: monospace;
+            opacity: 1;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        /* Keyframe per la decodifica */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <h1>Processo di Laurea: Completato con Successo 💻</h1>
-    <p class="info">Data: 27 Ottobre</p>
-    <p class="info">Ora: 19:00</p>
-    <p class="info">Luogo: Museum Cafe</p>
-    <p class="info">Indirizzo: Largo corpo di napoli, 3, 80134 Napoli NA</p>
+    <h1 id="title" class="decode-text"></h1>
+    <p class="info decode-text" id="date">...</p>
+    <p class="info decode-text" id="time">...</p>
+    <p class="info decode-text" id="place">...</p>
+    <p class="info decode-text" id="address">...</p>
 
-    <div class="countdown">
+    <div class="countdown decode-text" id="countdown-section" style="display: none;">
         <p>Mancano <span id="days">--</span> giorni!</p>
         <img src="I-WANT-YOU.jpg" alt="Immagine Festiva" class="countdown-image">
     </div>
 
     <script>
+        const elements = [
+            { id: "title", text: "Processo di Laurea: Completato con Successo 💻" },
+            { id: "date", text: "Data: 27 Ottobre" },
+            { id: "time", text: "Ora: 19:00" },
+            { id: "place", text: "Luogo: Museum Cafe" },
+            { id: "address", text: "Indirizzo: Largo corpo di napoli, 3, 80134 Napoli NA" }
+        ];
         const eventDate = new Date("2024-10-27T19:00:00").getTime();
-        const countdown = document.getElementById("days");
+        const countdownSection = document.getElementById("countdown-section");
 
+        // Funzione di decodifica
+        function decodeEffect(element, finalText, speed = 50) {
+            let randomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let iterations = 0;
+            const interval = setInterval(() => {
+                element.innerHTML = finalText
+                    .split("")
+                    .map((char, index) => {
+                        if (index < iterations) return char;
+                        return randomChars[Math.floor(Math.random() * randomChars.length)];
+                    })
+                    .join("");
+                if (iterations >= finalText.length) clearInterval(interval);
+                iterations += 1;
+            }, speed);
+        }
+
+        // Mostra ogni elemento con effetto di decodifica
+        elements.forEach((item, index) => {
+            setTimeout(() => {
+                const element = document.getElementById(item.id);
+                decodeEffect(element, item.text);
+                element.style.opacity = 1; // Rende visibile
+            }, index * 700); // Ritardo progressivo
+        });
+
+        // Funzione per il countdown dei giorni rimanenti
         function updateCountdown() {
             const now = new Date().getTime();
             const distance = eventDate - now;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-
-            countdown.innerHTML = days >= 0 ? days : 0;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24)) + 1;
+            document.getElementById("days").innerText = days >= 0 ? days : 0;
         }
 
-        updateCountdown();
-        setInterval(updateCountdown, 86400000); // Aggiorna ogni 24 ore
+        // Mostra il countdown alla fine dell'animazione di decodifica
+        setTimeout(() => {
+            countdownSection.style.display = "block";
+            countdownSection.style.opacity = 1;
+            updateCountdown();
+            setInterval(updateCountdown, 86400000); // Aggiorna ogni 24 ore
+        }, elements.length * 1000 + 1000); // Ritardo dopo l'ultimo elemento
     </script>
 </body>
 </html>
