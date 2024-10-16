@@ -6,14 +6,19 @@
     <title>Festa di Laurea di Stefano</title>
     <style>
         body {
-            background-image: url('sfondo.jpeg'); /* Se hai l’immagine nella root del repo */
+            background-image: url('sfondo.jpg'); /* Se hai l’immagine nella root del repo */
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            color: #00FF7F;
+            color: #4169E1;
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh; /* Altezza della finestra del browser */
+            margin: 0; /* Rimuove il margine predefinito */
         }
         h1 {
             font-size: 2.5em;
@@ -23,19 +28,38 @@
             margin: 20px 0;
         }
         .countdown {
-            font-size: 1.5em;
+            font-size: 2.5em; /* Dimensione del font più grande */
             margin-top: 30px;
+            color: steelblue; /* Colore dorato per il countdown */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Ombra per il testo */
+            animation: pulsate 1.5s infinite; /* Animazione di pulsazione */
+        }
+        @keyframes pulsate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .clock-icon {
+            font-size: 3em; /* Dimensione dell'icona dell'orologio */
+            margin-bottom: 20px; /* Spazio sotto l'icona */
+        }
+        .countdown-image {
+            width: 200px; /* Larghezza dell'immagine */
+            height: auto; /* Mantiene le proporzioni */
+            margin-top: 20px; /* Spazio sopra l'immagine */
         }
     </style>
 </head>
 <body>
-    <h1>Processo di Laurea: Completato con Successo 🎉</h1>
+    <h1>Processo di Laurea: Completato con Successo 💻</h1>
     <p class="info">Data: 27 Ottobre</p>
     <p class="info">Ora: 19:00</p>
     <p class="info">Luogo: Museum Cafe</p>
+    <p class="info">Indirizzo: Largo corpo di napoli, 3, 80134 Napoli NA</p>
 
     <div class="countdown">
-        <p>Mancano <span id="days">--</span> giorni a questa memorabile serata!</p>
+        <p>Mancano <span id="days">--</span> giorni!</p>
+        <img src="I-WANT-YOU.jpg" alt="Immagine Festiva" class="countdown-image"> <!-- Immagine sotto il countdown -->
     </div>
 
     <script>
