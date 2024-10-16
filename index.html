@@ -108,7 +108,7 @@
         const countdownSection = document.getElementById("countdown-section");
 
         // Funzione di decodifica
-        function decodeEffect(element, finalText, speed = 50) {
+        function decodeEffect(element, finalText, speed = 50, callback) {
             let randomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             let iterations = 0;
             const interval = setInterval(() => {
@@ -119,19 +119,37 @@
                         return randomChars[Math.floor(Math.random() * randomChars.length)];
                     })
                     .join("");
-                if (iterations >= finalText.length) clearInterval(interval);
+                if (iterations >= finalText.length) {
+                    clearInterval(interval);
+                    if (callback) callback();
+                }
                 iterations += 1;
             }, speed);
         }
 
-        // Mostra ogni elemento con effetto di decodifica
-        elements.forEach((item, index) => {
-            setTimeout(() => {
-                const element = document.getElementById(item.id);
-                decodeEffect(element, item.text);
+        // Mostra ogni elemento con effetto di decodifica in ordine
+        function decodeElementsSequentially(index = 0) {
+            if (index >= elements.length) {
+                // Mostra il countdown alla fine dell'animazione di decodifica
+                setTimeout(() => {
+                    countdownSection.style.display = "block";
+                    countdownSection.style.opacity = 1;
+                    updateCountdown();
+                    setInterval(updateCountdown, 86400000); // Aggiorna ogni 24 ore
+                }, 1000);
+                return;
+            }
+
+            const item = elements[index];
+            const element = document.getElementById(item.id);
+            decodeEffect(element, item.text, 50, () => {
                 element.style.opacity = 1; // Rende visibile
-            }, index * 500); // Ritardo progressivo
-        });
+                decodeElementsSequentially(index + 1); // Decodifica il prossimo elemento
+            });
+        }
+
+        // Avvia la decodifica in sequenza
+        decodeElementsSequentially();
 
         // Funzione per il countdown dei giorni rimanenti
         function updateCountdown() {
@@ -140,14 +158,6 @@
             const days = Math.floor(distance / (1000 * 60 * 60 * 24)) + 1;
             document.getElementById("days").innerText = days >= 0 ? days : 0;
         }
-
-        // Mostra il countdown alla fine dell'animazione di decodifica
-        setTimeout(() => {
-            countdownSection.style.display = "block";
-            countdownSection.style.opacity = 1;
-            updateCountdown();
-            setInterval(updateCountdown, 86400000); // Aggiorna ogni 24 ore
-        }, elements.length * 600 + 1000); // Ritardo dopo l'ultimo elemento
     </script>
 </body>
 </html>
