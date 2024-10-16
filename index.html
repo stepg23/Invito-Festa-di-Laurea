@@ -6,20 +6,39 @@
     <title>Festa di Laurea di Stefano</title>
     <style>
         body {
-            background-image: url('sfondo.jpg'); /* Se hai l’immagine nella root del repo */
+            background-image: url('sfondo.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            color: #4169E1;
+            color: #186c03; /* Cambia il colore del testo a un bianco più chiaro */
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 50px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            height: 100vh; /* Altezza della finestra del browser */
-            margin: 0; /* Rimuove il margine predefinito */
+            height: 100vh;
+            margin: 0;
+            position: relative; /* Posiziona per inserire l'overlay */
         }
+
+        /* Overlay semitrasparente */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Overlay nero con opacità al 60% */
+            z-index: 1;
+        }
+
+        h1, .info, .countdown {
+            position: relative;
+            z-index: 2; /* Porta il testo sopra l'overlay */
+        }
+
         h1 {
             font-size: 2.5em;
         }
@@ -28,11 +47,11 @@
             margin: 20px 0;
         }
         .countdown {
-            font-size: 2.5em; /* Dimensione del font più grande */
+            font-size: 2.5em;
             margin-top: 30px;
-            color: steelblue; /* Colore dorato per il countdown */
+            color: #186c03; /* Cambia il colore del countdown a dorato */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Ombra per il testo */
-            animation: pulsate 1.5s infinite; /* Animazione di pulsazione */
+            animation: pulsate 1.5s infinite;
         }
         @keyframes pulsate {
             0% { transform: scale(1); }
@@ -40,13 +59,13 @@
             100% { transform: scale(1); }
         }
         .clock-icon {
-            font-size: 3em; /* Dimensione dell'icona dell'orologio */
-            margin-bottom: 20px; /* Spazio sotto l'icona */
+            font-size: 3em;
+            margin-bottom: 20px;
         }
         .countdown-image {
-            width: 200px; /* Larghezza dell'immagine */
-            height: auto; /* Mantiene le proporzioni */
-            margin-top: 20px; /* Spazio sopra l'immagine */
+            width: 200px;
+            height: auto;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -59,7 +78,7 @@
 
     <div class="countdown">
         <p>Mancano <span id="days">--</span> giorni!</p>
-        <img src="I-WANT-YOU.jpg" alt="Immagine Festiva" class="countdown-image"> <!-- Immagine sotto il countdown -->
+        <img src="I-WANT-YOU.jpg" alt="Immagine Festiva" class="countdown-image">
     </div>
 
     <script>
