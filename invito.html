@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festa di Laurea di Stefano</title>
+    <style>
+        body {
+            background-image: url('sfondo.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+
+        /* Overlay semitrasparente */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        h1, .info, .countdown {
+            position: relative;
+            z-index: 2;
+            opacity: 0; /* Parte invisibile per l'effetto di apparizione */
+        }
+
+        h1 {
+            font-size: 2.5em;
+        }
+
+        .info {
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+
+        .countdown {
+            font-size: 2.5em;
+            margin-top: 30px;
+            color: #186c03;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            animation: pulsate 1.5s infinite;
+        }
+
+        @keyframes pulsate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .countdown-image {
+            width: 200px;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        /* Effetto decodifica */
+        .decode-text {
+            display: inline-block;
+            font-family: monospace;
+            opacity: 1;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        /* Keyframe per la decodifica */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Stile per il bottone */
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #186c03;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 2;
+        }
+
+        .button:hover {
+            background-color: #0a4e02;
+        }
+
+        /* Stile per la finestra modale */
+        .modal {
+            display: none; /* Nascosta di default */
+            position: fixed;
+            z-index: 3;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Stile per il campo input del nome */
+        .name-input {
+            padding: 10px;
+            width: 80%;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Stile per il bottone di invio */
+        .submit-button {
+            padding: 10px 20px;
+            background-color: #186c03;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #0a4e02;
+        }
+
+        .thank-you-modal {
+            display: none; /* Nascosta di default */
+            position: fixed;
+            z-index: 4;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .thank-you-content {
+            background-color: #0a4e02;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            text-align: center;
+        }
+
+        .thank-you-image {
+            width: 200px;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="title" class="decode-text"></h1>
+    <p class="info decode-text" id="date"></p>
+    <p class="info decode-text" id="time"></p>
+    <p class="info decode-text" id="place"></p>
+    <p class="info decode-text" id="address"></p>
+
+    <div class="countdown decode-text" id="countdown-section" style="display: none;">
+        <p>Mancano <span id="days">--</span> giorni!</p>
+        <img src="I-WANT-YOU.jpg" alt="Immagine Festiva" class="countdown-image">
+    </div>
+
+    <button class="button" id="open-form" style="display: none;">Clicca che ci sarai!</button>
+
+    <!-- Finestra Modale -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-modal">&times;</span>
+            <input type="text" id="name-input" class="name-input" placeholder="Chi sei?">
+            <button class="submit-button" id="submit-name">Invia</button>
+        </div>
+    </div>
+
+    <!-- Finestra Modale di Ringraziamento -->
+    <div id="thankYouModal" class="thank-you-modal">
+        <div class="thank-you-content">
+            <h2 id="thank-you-message"></h2>
+            <img src="thank-you.png" alt="Immagine di Ringraziamento" class="thank-you-image">
+            <span class="close" id="close-thank-you">&times;</span>
+        </div>
+    </div>
+
+    <script>
+        const elements = [
+            { id: "title", text: "Processo di Laurea: Completato con Successo 💻" },
+            { id: "date", text: "Data: 27 Ottobre" },
+            { id: "time", text: "Ora: 19:00" },
+            { id: "place", text: "Luogo: Museum Cafe" },
+            { id: "address", text: "Indirizzo: Largo corpo di napoli, 3, 80134 Napoli NA" }
+        ];
+        const eventDate = new Date("2024-10-27T19:00:00").getTime();
+        const countdownSection = document.getElementById("countdown-section");
+        const openFormButton = document.getElementById("open-form");
+        const modal = document.getElementById("myModal");
+        const closeModal = document.getElementById("close-modal");
+        const nameInput = document.getElementById("name-input");
+        const submitNameButton = document.getElementById("submit-name");
+        const thankYouModal = document.getElementById("thankYouModal");
+        const closeThankYouModal = document.getElementById("close-thank-you");
+        const thankYouMessage = document.getElementById("thank-you-message");
+
+        // Funzione di decodifica
+        function decodeEffect(element, finalText, speed = 50, callback) {
+            let randomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let iterations = 0;
+            const interval = setInterval(() => {
+                element.innerHTML = finalText
+                    .split("")
+                    .map((char, index) => {
+                        if (index < iterations) return char;
+                        return randomChars[Math.floor(Math.random() * randomChars.length)];
+                    })
+                    .join("");
+                if (iterations >= finalText.length) {
+                    clearInterval(interval);
+                    if (callback) callback();
+                }
+                iterations += 1;
+            }, speed);
+        }
+
+        // Mostra ogni elemento con effetto di decodifica in ordine
+        function decodeElementsSequentially(index = 0) {
+            if (index >= elements.length) {
+                // Mostra il countdown alla fine dell'animazione di decodifica
+                setTimeout(() => {
+                    countdownSection.style.display = "block";
+                    countdownSection.style.opacity = 1;
+                    updateCountdown();
+                    setInterval(updateCountdown, 86400000); // Aggiorna ogni 24 ore
+                    openFormButton.style.display = "block"; // Mostra il bottone
+                }, 1000);
+                return;
+            }
+
+            const item = elements[index];
+            const element = document.getElementById(item.id);
+            decodeEffect(element, item.text, 50, () => {
+                element.style.opacity = 1; // Rende visibile
+                decodeElementsSequentially(index + 1); // Decodifica il prossimo elemento
+            });
+        }
+
+        // Funzione per aprire la finestra modale
+        openFormButton.addEventListener("click", () => {
+            modal.style.display = "block";
+        });
+
+        // Funzione per chiudere la finestra modale
+        closeModal.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+
+        // Funzione per mostrare il messaggio di ringraziamento
+        function showThankYouModal() {
+            thankYouModal.style.display = "block";
+            thankYouMessage.textContent = `Grazie per la tua partecipazione ${nameInput.value}, ci vediamo alla festa!!!`;
+        }
+
+        closeThankYouModal.addEventListener("click", () => {
+            thankYouModal.style.display = "none";
+        });
+
+        // Funzione per inviare il nome e aprire il form
+        submitNameButton.addEventListener("click", () => {
+            const name = nameInput.value;
+            if (name) {
+                // Invia il nome al modulo Google
+                const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdKka2ENBxqUgh6I24BvGfhdSOhKsiYtFcq44hUh2VwtZd0Bw/formResponse";
+                const encodedName = encodeURIComponent(name);
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", formUrl);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.send("entry.1161554896=" + encodedName); // Sostituisci con il tuo ID campo
+                modal.style.display = "none"; // Chiudi la modale
+                showThankYouModal(); // Mostra il messaggio di ringraziamento
+                nameInput.value = ""; // Resetta il campo input
+            } else {
+                alert("Per favore, inserisci il tuo nome.");
+            }
+        });
+
+        // Funzione per calcolare il countdown
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+            if (distance < 0) {
+                countdownSection.innerHTML = "Ci vediamo alla festa!";
+            } else {
+                document.getElementById("days").innerText = days;
+            }
+        }
+
+        // Avvia l'animazione di decodifica
+        decodeElementsSequentially();
+    </script>
+</body>
+</html>
