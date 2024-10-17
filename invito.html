@@ -330,7 +330,7 @@
         function updateCountdown() {
             const now = new Date().getTime();
             const distance = eventDate - now;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const days = Math.ceil(distance / (1000 * 60 * 60 * 24));
 
             if (distance < 0) {
                 countdownSection.innerHTML = "Ci vediamo alla festa!";
